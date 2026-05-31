@@ -1,4 +1,5 @@
-const CACHE_NAME = 'billsplit-pro-v4';
+const CACHE_NAME = 'billsplit-pro-v5';
+
 const ASSETS = [
   './',
   './index.html',
@@ -7,7 +8,8 @@ const ASSETS = [
   './icon-192.png',
   './icon-512.png',
   './feature-graphic.svg',
-  './screenshot-narrow.svg'
+  './screenshot-narrow.svg',
+  './sw.js'
 ];
 
 self.addEventListener('install', event => {
@@ -19,7 +21,7 @@ self.addEventListener('install', event => {
 
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(keys =>
+    caches.keys().then(keys => 
       Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))
     )
   );
@@ -27,15 +29,24 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-  if (event.request.mode === 'navigate') {
-    event.respondWith(
-      fetch(event.request).catch(() => caches.match('./index.html'))
-    );
-  } else {
-    event.respondWith(
-      caches.match(event.request).then(cached => {
-        return cached || fetch(event.request).catch(() => new Response('Offline', {status: 503}));
-      })
-    );
-  }
+  event.respondWith(
+    caches.match(event.request).then(cachedResponse => {
+      return cachedResponse || fetch(event.request).then(networkResponse => {
+        // Dynamic caching for successful responses
+        if (networkResponse && networkResponse.status === 200) {
+          const responseClone = networkResponse.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseClone);
+          });
+        }
+        return networkResponse;
+      }).catch(() => {
+        // Offline fallback
+        if (event.request.mode === 'navigate') {
+          return caches.match('./index.html');
+        }
+        return new Response('Offline', { status: 503 });
+      });
+    })
+  );
 });
