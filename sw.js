@@ -1,106 +1,97 @@
-const CACHE_NAME = 'billsplit-pro-v5';
-const URLS_TO_CACHE = [
-  './',
-  './index.html',
-  './manifest.json',
-  './icon.svg'
+const CACHE_NAME = 'billsplit-pro-v6';
+const ASSETS = [
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/icon.svg',
+  '/icon-192.png',
+  '/icon-512.png',
+  '/icon-maskable-192.png',
+  '/icon-maskable-512.png',
+  '/apple-touch-icon.png'
 ];
 
-// ═══════════════════════════════════════════════════
-//  INSTALL EVENT
-// ═══════════════════════════════════════════════════
+// Install Event
 self.addEventListener('install', event => {
-  console.log('[SW] Installing...');
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
-      console.log('[SW] Caching files');
-      // Add individual URLs and handle errors gracefully
-      return Promise.allSettled(
-        URLS_TO_CACHE.map(url => cache.add(url))
-      ).then(() => {
-        console.log('[SW] Cache completed (errors ignored)');
-        return self.skipWaiting();
-      }).catch(err => {
-        console.log('[SW] Cache error (non-fatal):', err);
-        return self.skipWaiting();
+      return cache.addAll(ASSETS).catch(() => {
+        console.log('Some assets failed to cache, but continuing...');
+        return Promise.resolve();
       });
     })
   );
+  self.skipWaiting();
 });
 
-// ═══════════════════════════════════════════════════
-//  ACTIVATE EVENT
-// ═══════════════════════════════════════════════════
+// Activate Event - clean up old caches
 self.addEventListener('activate', event => {
-  console.log('[SW] Activating...');
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheName !== CACHE_NAME) {
-            console.log('[SW] Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
         })
       );
-    }).then(() => self.clients.claim())
+    })
   );
+  self.clients.claim();
 });
 
-// ═══════════════════════════════════════════════════
-//  FETCH EVENT
-// ═══════════════════════════════════════════════════
+// Fetch Event - Network first, fallback to cache
 self.addEventListener('fetch', event => {
-  const { request } = event;
-  const url = new URL(request.url);
-
-  // Skip chrome extensions and non-GET requests
-  if (request.method !== 'GET' || url.protocol === 'chrome-extension:') {
+  // Skip non-GET requests
+  if (event.request.method !== 'GET') {
     return;
   }
 
-  // Handle navigation requests
-  if (request.mode === 'navigate') {
-    event.respondWith(
-      fetch(request)
-        .then(response => {
-          // Cache successful responses
-          if (response.ok) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then(cache => {
-              cache.put(request, clone).catch(() => {});
-            });
-          }
-          return response;
-        })
-        .catch(() => {
-          // Return cached version or index.html
-          return caches.match(request)
-            .then(cached => cached || caches.match('./index.html'))
-            .catch(() => new Response('Offline', { status: 503 }));
-        })
-    );
+  // Skip chrome extension requests
+  if (event.request.url.includes('chrome-extension://')) {
     return;
   }
 
-  // Handle all other requests - Network first, cache fallback
+  // Skip cross-origin requests (e.g. Google Fonts)
+  const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin) {
+    return;
+  }
+
   event.respondWith(
-    fetch(request)
+    fetch(event.request)
       .then(response => {
-        // Only cache successful responses
-        if (response && response.status === 200 && response.type !== 'error') {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(request, clone).catch(() => {});
-          });
+        // Don't cache non-successful responses
+        if (!response || response.status !== 200 || response.type === 'error') {
+          return response;
         }
+
+        // Clone and cache the response
+        const responseToCache = response.clone();
+        caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, responseToCache).catch(() => {});
+        });
+
         return response;
       })
       .catch(() => {
-        // Try cache on network failure
-        return caches.match(request)
-          .then(cached => cached || new Response('Offline', { status: 503 }))
-          .catch(() => new Response('Offline', { status: 503 }));
+        // Return from cache if network fails
+        return caches.match(event.request).then(response => {
+          if (response) {
+            return response;
+          }
+          // Fallback for navigation requests
+          if (event.request.mode === 'navigate') {
+            return caches.match('/index.html');
+          }
+          return new Response('Offline - content not available', {
+            status: 503,
+            statusText: 'Service Unavailable',
+            headers: new Headers({
+              'Content-Type': 'text/plain'
+            })
+          });
+        });
       })
   );
 });

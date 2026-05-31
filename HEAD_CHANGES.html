@@ -1,0 +1,57 @@
+<!--
+  ╔══════════════════════════════════════════════════════════════╗
+  ║  PWABuilder Fix — index.html <head> changes                  ║
+  ║  Replace the relevant lines in your <head> with these        ║
+  ╚══════════════════════════════════════════════════════════════╝
+
+  STEP 1: Replace your current <head> meta/link block with this:
+-->
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <!-- Theme color — matches manifest -->
+  <meta name="theme-color" content="#c8f135">
+
+  <!-- iOS PWA support -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="BillSplit">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <!-- SEO -->
+  <meta name="description" content="Split bills fairly with friends. Zero drama, instant settlements.">
+  <title>BillSplit Pro — Fair Split, Zero Drama</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- iOS icon — MUST be PNG (SVG not supported by iOS) -->
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+  <!-- Favicon fallback -->
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+  <link rel="icon" type="image/svg+xml" href="/icon.svg">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Anybody:wght@400;600;700;900&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+  <!-- ... rest of your <head> styles ... -->
+</head>
+
+<!--
+  STEP 2: Near the bottom of <body>, update the service worker registration.
+  Replace your current SW registration script with this:
+-->
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js', { scope: '/' })
+        .then(reg => console.log('SW registered:', reg.scope))
+        .catch(err => console.error('SW registration failed:', err));
+    });
+  }
+</script>
