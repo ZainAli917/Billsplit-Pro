@@ -34,6 +34,7 @@
   AddType application/x-web-app-manifest+json .webmanifest
   AddType image/svg+xml .svg
   AddType text/javascript .js
+  AddType application/javascript .js
 </IfModule>
 
 # Enable mod_rewrite for PWA routing
@@ -56,11 +57,12 @@
   Header set X-Frame-Options "SAMEORIGIN"
   Header set X-XSS-Protection "1; mode=block"
   Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set Permissions-Policy "geolocation=(), microphone=(), camera=()"
 </IfModule>
 
 # Prevent directory browsing and access to sensitive files
 Options -Indexes
-<FilesMatch "(?i)^\.">
+<FilesMatch "(?i)^\."> 
   Order allow,deny
   Deny from all
 </FilesMatch>

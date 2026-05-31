@@ -1,27 +1,19 @@
 {
   "name": "BillSplit Pro - Fair Split, Zero Drama",
-  "short_name": "BillSplit Pro",
+  "short_name": "BillSplit",
   "description": "Split bills fairly with friends. Zero drama, instant settlements.",
-  "start_url": "./index.html",
+  "version": "2.0.0",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#0f0f14",
   "theme_color": "#c8f135",
-  "screenshots": [
-    {
-      "src": "./icon.svg",
-      "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
-    {
-      "src": "./icon.svg",
-      "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "maskable"
-    }
-  ],
+  "dir": "ltr",
+  "lang": "en",
+  "prefer_related_applications": false,
+  "categories": ["finance", "productivity", "utilities"],
+  
   "icons": [
     {
       "src": "./icon.svg",
@@ -42,19 +34,51 @@
       "purpose": "maskable"
     }
   ],
-  "categories": ["finance", "productivity"],
+
+  "screenshots": [
+    {
+      "src": "./icon.svg",
+      "sizes": "540x720",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "./icon.svg",
+      "sizes": "1280x720",
+      "type": "image/svg+xml",
+      "form_factor": "wide"
+    }
+  ],
+
   "shortcuts": [
     {
       "name": "Add Expense",
-      "short_name": "Add Expense",
-      "description": "Quickly add a new expense",
+      "short_name": "New Expense",
+      "description": "Quickly add a new expense to your group",
       "url": "./index.html?action=addExpense",
       "icons": [
         {
           "src": "./icon.svg",
-          "sizes": "192x192"
+          "sizes": "192x192",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Create Group",
+      "short_name": "New Group",
+      "description": "Create a new bill split group",
+      "url": "./index.html?action=newGroup",
+      "icons": [
+        {
+          "src": "./icon.svg",
+          "sizes": "192x192",
+          "type": "image/svg+xml"
         }
       ]
     }
-  ]
+  ],
+
+  "related_applications": [],
+  "scope_extensions": []
 }
