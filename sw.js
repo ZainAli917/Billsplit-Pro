@@ -1,4 +1,4 @@
-const CACHE_NAME = 'billsplit-pro-v3';
+const CACHE_NAME = 'billsplit-pro-v4';
 const ASSETS = [
   './',
   './index.html',
@@ -24,12 +24,22 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(cached => {
-      return cached || fetch(event.request).catch(() => {
-        // Offline fallback
-        return caches.match('./index.html');
-      });
-    })
-  );
+  // For navigation requests, serve from cache or fallback to index.html
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      caches.match('./index.html').then(cached => {
+        return cached || fetch(event.request).catch(() => cached);
+      })
+    );
+  } else {
+    // For other requests, cache-first then network
+    event.respondWith(
+      caches.match(event.request).then(cached => {
+        return cached || fetch(event.request).catch(() => {
+          // Fallback for images or other resources — you can return a placeholder
+          return new Response('Offline', { status: 503 });
+        });
+      })
+    );
+  }
 });
