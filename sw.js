@@ -1,4 +1,4 @@
-const CACHE_NAME = 'billsplit-pro-v4';
+const CACHE_NAME = 'billsplit-pro-v5';
 const ASSETS = [
   './',
   './index.html',
@@ -10,32 +10,65 @@ const ASSETS = [
   './screenshot-narrow.svg'
 ];
 
+// Install Event
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll(ASSETS).catch(() => {
+        // If any asset fails, continue anyway
+        return Promise.resolve();
+      });
+    })
   );
   self.skipWaiting();
 });
 
+// Activate Event
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))
-    )
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
   );
   self.clients.claim();
 });
 
+// Fetch Event - Network first, fallback to cache
 self.addEventListener('fetch', event => {
-  if (event.request.mode === 'navigate') {
-    event.respondWith(
-      fetch(event.request).catch(() => caches.match('./index.html'))
-    );
-  } else {
-    event.respondWith(
-      caches.match(event.request).then(cached => {
-        return cached || fetch(event.request).catch(() => new Response('Offline', {status: 503}));
+  if (event.request.method !== 'GET') return;
+
+  event.respondWith(
+    fetch(event.request)
+      .then(response => {
+        // Don't cache non-successful responses
+        if (!response || response.status !== 200 || response.type === 'basic') {
+          return response;
+        }
+        
+        const responseToCache = response.clone();
+        caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, responseToCache);
+        });
+        
+        return response;
       })
-    );
-  }
+      .catch(() => {
+        // Return from cache if network fails
+        return caches.match(event.request).then(response => {
+          return response || new Response('Offline - content not available', {
+            status: 503,
+            statusText: 'Service Unavailable',
+            headers: new Headers({
+              'Content-Type': 'text/plain'
+            })
+          });
+        });
+      })
+  );
 });
