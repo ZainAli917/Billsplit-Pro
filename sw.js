@@ -4,7 +4,10 @@ const ASSETS = [
   './index.html',
   './manifest.json',
   './icon.svg',
-  './feature-graphic.svg'
+  './icon-192.png',
+  './icon-512.png',
+  './feature-graphic.svg',
+  './screenshot-narrow.svg'
 ];
 
 self.addEventListener('install', event => {
@@ -24,7 +27,6 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-  // For navigation requests, serve from cache or fallback to index.html
   if (event.request.mode === 'navigate') {
     event.respondWith(
       caches.match('./index.html').then(cached => {
@@ -32,13 +34,9 @@ self.addEventListener('fetch', event => {
       })
     );
   } else {
-    // For other requests, cache-first then network
     event.respondWith(
       caches.match(event.request).then(cached => {
-        return cached || fetch(event.request).catch(() => {
-          // Fallback for images or other resources — you can return a placeholder
-          return new Response('Offline', { status: 503 });
-        });
+        return cached || fetch(event.request).catch(() => new Response('Offline', {status:503}));
       })
     );
   }
