@@ -1,30 +1,35 @@
 {
-  "id": "/",
   "name": "BillSplit Pro",
   "short_name": "BillSplit",
   "description": "Split bills fairly with friends. Zero drama, instant settlements.",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#0f0f14",
   "theme_color": "#0f0f14",
   "orientation": "portrait-primary",
-  "categories": ["finance", "utilities"],
   "lang": "en",
+  "categories": ["finance", "utilities"],
   "icons": [
-    { "src": "icons/icon-48.svg",   "sizes": "48x48",   "type": "image/svg+xml", "purpose": "any" },
-    { "src": "icons/icon-72.svg",   "sizes": "72x72",   "type": "image/svg+xml", "purpose": "any" },
-    { "src": "icons/icon-96.svg",   "sizes": "96x96",   "type": "image/svg+xml", "purpose": "any" },
-    { "src": "icons/icon-128.svg",  "sizes": "128x128", "type": "image/svg+xml", "purpose": "any" },
-    { "src": "icons/icon-144.svg",  "sizes": "144x144", "type": "image/svg+xml", "purpose": "any" },
-    { "src": "icons/icon-152.svg",  "sizes": "152x152", "type": "image/svg+xml", "purpose": "any" },
-    { "src": "icons/icon-192.svg",  "sizes": "192x192", "type": "image/svg+xml", "purpose": "any" },
-    { "src": "icons/icon-192.svg",  "sizes": "192x192", "type": "image/svg+xml", "purpose": "maskable" },
-    { "src": "icons/icon-256.svg",  "sizes": "256x256", "type": "image/svg+xml", "purpose": "any" },
-    { "src": "icons/icon-384.svg",  "sizes": "384x384", "type": "image/svg+xml", "purpose": "any" },
-    { "src": "icons/icon-512.svg",  "sizes": "512x512", "type": "image/svg+xml", "purpose": "any" },
-    { "src": "icons/icon-512.svg",  "sizes": "512x512", "type": "image/svg+xml", "purpose": "maskable" }
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%230f0f14'/%3E%3Ctext x='96' y='130' text-anchor='middle' font-size='100'%3E💰%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230f0f14'/%3E%3Ctext x='256' y='340' text-anchor='middle' font-size='280'%3E💰%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
   ],
   "screenshots": [
-    { "src": "icons/feature-graphic.svg", "sizes": "1024x500", "type": "image/svg+xml", "form_factor": "wide" }
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 500'%3E%3Crect width='1024' height='500' fill='%230f0f14'/%3E%3Ctext x='512' y='260' text-anchor='middle' fill='%23c8f135' font-size='36'%3EBillSplit Pro%3C/text%3E%3C/svg%3E",
+      "sizes": "1024x500",
+      "type": "image/svg+xml",
+      "form_factor": "wide"
+    }
   ]
 }
