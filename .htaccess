@@ -47,7 +47,7 @@
   RewriteCond %{REQUEST_FILENAME} !-d
   
   # Route to index.html for PWA (except for specific file extensions)
-  RewriteRule ^(?!.*\.(html|css|js|json|svg|png|jpg|jpeg|gif|webp)$).*$ index.html [QSA,L]
+  RewriteRule ^(?!.*\.(html|css|js|json|svg|png|jpg|jpeg|gif|webp|woff|woff2)$).*$ index.html [QSA,L]
 </IfModule>
 
 # Security headers
@@ -58,6 +58,7 @@
   Header set X-XSS-Protection "1; mode=block"
   Header set Referrer-Policy "strict-origin-when-cross-origin"
   Header set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+  Header set Cache-Control "public, max-age=3600"
 </IfModule>
 
 # Prevent directory browsing and access to sensitive files

@@ -12,7 +12,8 @@
   "dir": "ltr",
   "lang": "en",
   "prefer_related_applications": false,
-  "categories": ["finance", "productivity", "utilities"],
+  "categories": ["finance", "productivity"],
+  "prefer_related_applications": false,
   
   "icons": [
     {
@@ -79,6 +80,11 @@
     }
   ],
 
-  "related_applications": [],
-  "scope_extensions": []
+  "screenshots_wide": [
+    {
+      "src": "./icon.svg",
+      "sizes": "1280x720",
+      "type": "image/svg+xml"
+    }
+  ]
 }
