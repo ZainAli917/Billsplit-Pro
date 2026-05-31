@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a1a24"/>
+      <stop offset="100%" stop-color="#0f0f14"/>
+    </linearGradient>
+    <linearGradient id="lime" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#c8f135"/>
+      <stop offset="100%" stop-color="#8adb00"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2.16" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="72" height="72" rx="12.959999999999999" fill="url(#bg)"/>
+
+  <!-- Glow circle behind icon -->
+  <circle cx="36.0" cy="31.68" r="20.160000000000004" fill="rgba(200,241,53,0.07)"/>
+
+  <!-- Split line (visual) -->
+  <line x1="20.160000000000004" y1="31.68" x2="51.839999999999996" y2="31.68"
+        stroke="url(#lime)" stroke-width="1.8" stroke-linecap="round" opacity="0.3"/>
+
+  <!-- Rs symbol left -->
+  <text x="20.160000000000004" y="36.0"
+        text-anchor="middle" font-family="Arial Black, sans-serif"
+        font-weight="900" font-size="15.84"
+        fill="url(#lime)" filter="url(#glow)">₹</text>
+
+  <!-- Divide symbol center -->
+  <text x="36.0" y="38.160000000000004"
+        text-anchor="middle" font-family="Arial Black, sans-serif"
+        font-weight="900" font-size="20.160000000000004"
+        fill="#ffffff" opacity="0.9">÷</text>
+
+  <!-- $ symbol right -->
+  <text x="51.839999999999996" y="36.0"
+        text-anchor="middle" font-family="Arial Black, sans-serif"
+        font-weight="900" font-size="15.84"
+        fill="url(#lime)" filter="url(#glow)">$</text>
+
+  <!-- App name -->
+  <text x="36.0" y="54.72"
+        text-anchor="middle" font-family="Arial Black, sans-serif"
+        font-weight="900" font-size="9.36"
+        fill="#c8f135" letter-spacing="0.14400000000000002">BILLSPLIT</text>
+
+  <!-- Tagline -->
+  <text x="36.0" y="63.36"
+        text-anchor="middle" font-family="Arial, sans-serif"
+        font-weight="400" font-size="5.3999999999999995"
+        fill="rgba(255,255,255,0.35)" letter-spacing="0.07200000000000001">PRO</text>
+</svg>
