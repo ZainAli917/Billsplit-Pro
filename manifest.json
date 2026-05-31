@@ -4,7 +4,7 @@
   "description": "Split bills fairly with friends. Zero drama, instant settlements.",
   "start_url": "./",
   "scope": "/",
-  "id": "billsplit-pro.vercel.app",
+  "id": "https://billsplit-pro.vercel.app",
   "display": "standalone",
   "display_override": ["standalone", "minimal-ui"],
   "background_color": "#0f0f14",
@@ -15,7 +15,7 @@
   "prefer_related_applications": false,
   "iarc_rating_id": "e84b5f6e-4c7e-4f8e-9c8e-0f5e7d8c9b0a",
   "categories": ["finance", "utilities", "productivity"],
-  
+
   "icons": [
     {
       "src": "icon.svg",
@@ -63,5 +63,6 @@
   ],
 
   "related_applications": [],
-  "scope_extensions": []
+  "scope_extensions": [],
+  "file_handlers": []
 }
