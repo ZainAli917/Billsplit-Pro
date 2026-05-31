@@ -29,14 +29,12 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      caches.match('./index.html').then(cached => {
-        return cached || fetch(event.request).catch(() => cached);
-      })
+      fetch(event.request).catch(() => caches.match('./index.html'))
     );
   } else {
     event.respondWith(
       caches.match(event.request).then(cached => {
-        return cached || fetch(event.request).catch(() => new Response('Offline', {status:503}));
+        return cached || fetch(event.request).catch(() => new Response('Offline', {status: 503}));
       })
     );
   }
