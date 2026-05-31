@@ -11,8 +11,26 @@
 <meta name="description" content="Split bills fairly with friends. Zero drama, instant settlements.">
 <title>BillSplit Pro — Fair Split, Zero Drama</title>
 
-<link rel="manifest" href="./manifest.json">
-<link rel="apple-touch-icon" href="icons/icon-192.svg">
+<!-- PWA MANIFEST INLINE -->
+<script>
+const manifestData = {
+  name: "BillSplit Pro",
+  short_name: "BillSplit",
+  description: "Split bills fairly with friends",
+  start_url: "./",
+  display: "standalone",
+  background_color: "#0f0f14",
+  theme_color: "#0f0f14",
+  orientation: "portrait",
+  icons: [
+    { src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%230f0f14'/%3E%3Ctext x='96' y='130' text-anchor='middle' font-size='100'%3E💰%3C/text%3E%3C/svg%3E", sizes: "192x192", type: "image/svg+xml" },
+    { src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230f0f14'/%3E%3Ctext x='256' y='340' text-anchor='middle' font-size='280'%3E💰%3C/text%3E%3C/svg%3E", sizes: "512x512", type: "image/svg+xml" }
+  ]
+};
+const blob = new Blob([JSON.stringify(manifestData)], {type:'application/json'});
+const manifestURL = URL.createObjectURL(blob);
+document.write('<link rel="manifest" href="' + manifestURL + '">');
+</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anybody:wght@400;600;700;900&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
@@ -587,12 +605,14 @@ body::before {
 </head>
 <body>
 
+<!-- INSTALL BANNER -->
 <div class="install-banner" id="installBanner">
   <div class="ib-text"><b>Install BillSplit Pro</b><br>Add to home screen for best experience</div>
   <button class="ib-btn" id="installBtn" onclick="installApp()">Install</button>
   <button class="ib-close" onclick="dismissInstall()">×</button>
 </div>
 
+<!-- HEADER -->
 <div class="header">
   <div class="logo">Bill<span>Split</span></div>
   <div class="header-right">
@@ -601,6 +621,9 @@ body::before {
   </div>
 </div>
 
+<!-- ══════════════ PAGES ══════════════ -->
+
+<!-- HOME -->
 <div class="page active" id="page-home">
   <div class="page-title">My Groups</div>
   <div class="page-sub">Track every shared expense</div>
@@ -631,6 +654,7 @@ body::before {
     <input class="search-input" id="searchGroups" placeholder="Search groups..." oninput="filterGroups(this.value)">
   </div>
 
+  <!-- AdMob Banner Slot -->
   <div class="ad-slot" id="adBanner">📢 Ad — AdMob Banner (320×50)</div>
 
   <div class="section-head">
@@ -641,6 +665,7 @@ body::before {
   <div id="groupsList"></div>
 </div>
 
+<!-- GROUP DETAIL -->
 <div class="page" id="page-group">
   <button class="back-btn" onclick="navTo('home')">← All Groups</button>
 
@@ -670,18 +695,21 @@ body::before {
   <button class="btn-whatsapp" onclick="shareGroup()">💬 Share via WhatsApp</button>
 </div>
 
+<!-- ACTIVITY -->
 <div class="page" id="page-activity">
   <div class="page-title">Activity</div>
   <div class="page-sub">All recent transactions</div>
   <div id="activityList"></div>
 </div>
 
+<!-- FRIENDS -->
 <div class="page" id="page-friends">
   <div class="page-title">Friends</div>
   <div class="page-sub">People you split with</div>
   <div id="friendsList"></div>
 </div>
 
+<!-- SETTINGS -->
 <div class="page" id="page-settings">
   <div class="page-title">Settings</div>
   <div class="page-sub">Your preferences</div>
@@ -729,6 +757,7 @@ body::before {
   </div>
 </div>
 
+<!-- ══════════════ BOTTOM NAV ══════════════ -->
 <div class="bottom-nav">
   <div class="nav-item active" id="nav-home" onclick="navTo('home')">
     <div class="ni-icon">🏠</div><div class="ni-lbl">Home</div>
@@ -747,6 +776,9 @@ body::before {
 
 <button class="fab" id="fab" onclick="showModal('newGroup')">＋</button>
 
+<!-- ══════════════ MODALS ══════════════ -->
+
+<!-- NEW GROUP -->
 <div class="modal-overlay" id="modal-newGroup" onclick="closeOutside(event,'newGroup')">
   <div class="modal-sheet">
     <div class="sheet-handle"></div>
@@ -768,6 +800,7 @@ body::before {
   </div>
 </div>
 
+<!-- ADD EXPENSE -->
 <div class="modal-overlay" id="modal-addExpense" onclick="closeOutside(event,'addExpense')">
   <div class="modal-sheet">
     <div class="sheet-handle"></div>
@@ -828,6 +861,7 @@ body::before {
   </div>
 </div>
 
+<!-- EXPENSE DETAIL -->
 <div class="modal-overlay" id="modal-expDetail" onclick="closeOutside(event,'expDetail')">
   <div class="modal-sheet">
     <div class="sheet-handle"></div>
@@ -836,6 +870,7 @@ body::before {
   </div>
 </div>
 
+<!-- GROUP SETTINGS -->
 <div class="modal-overlay" id="modal-groupSettings" onclick="closeOutside(event,'groupSettings')">
   <div class="modal-sheet">
     <div class="sheet-handle"></div>
@@ -854,6 +889,7 @@ body::before {
   </div>
 </div>
 
+<!-- NOTIFICATIONS -->
 <div class="modal-overlay" id="modal-notif" onclick="closeOutside(event,'notif')">
   <div class="modal-sheet">
     <div class="sheet-handle"></div>
@@ -932,12 +968,19 @@ function dismissInstall() {
   localStorage.setItem('bsp_install_dismissed', '1');
 }
 
-// PROPER SERVICE WORKER REGISTRATION (Fixed for PWABuilder)
+// SERVICE WORKER
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
-      .catch(err => console.error('SW Registration Failed:', err));
-  });
+  const sw = `
+    const CACHE = 'bsp-v2';
+    self.addEventListener('install', e => {
+      e.waitUntil(caches.open(CACHE).then(c => c.addAll(['/'])));
+    });
+    self.addEventListener('fetch', e => {
+      e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).catch(() => new Response('Offline'))));
+    });
+  `;
+  const blob = new Blob([sw], {type:'application/javascript'});
+  navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
 }
 
 // ═══════════════════════════════════════════════════
@@ -1075,7 +1118,7 @@ function renderBalances(g) {
     const chip = document.createElement('div');
     chip.className = 'balance-chip';
     chip.innerHTML = `
-      <div class="bc-avatar" style="background:${m.color}22;color:${m.color}">${m.name.toUpperCase()}</div>
+      <div class="bc-avatar" style="background:${m.color}22;color:${m.color}">${m.name[0].toUpperCase()}</div>
       <div class="bc-name">${m.name}</div>
       <div class="bc-amt ${b > 0.5 ? 'pos' : b < -0.5 ? 'neg' : 'zero'}">
         ${b > 0.5 ? '+' : ''}${S.currency} ${Math.abs(b).toFixed(0)}
@@ -1155,13 +1198,13 @@ function showAddExpense() {
   const g = getGroup();
   if (!g) return;
   splitMode    = 'equal';
-  selPayer     = g.members?.name || S.userName;
+  selPayer     = g.members[0]?.name || S.userName;
   selSplitMems = g.members.map(m => m.name);
   receiptData  = null;
 
   document.getElementById('exp-amount').value = '';
   document.getElementById('exp-desc').value   = '';
-  document.getElementById('exp-date').value   = new Date().toISOString().split('T');
+  document.getElementById('exp-date').value   = new Date().toISOString().split('T')[0];
   document.getElementById('receiptPreview').style.display = 'none';
   buildEmojiGrid('expCatGrid', true);
 
@@ -1192,7 +1235,7 @@ function buildSplitChips(g) {
   g.members.forEach(m => {
     const c = document.createElement('div');
     c.className = 'mc' + (selSplitMems.includes(m.name) ? ' sel' : '');
-    c.innerHTML = `<div class="mc-av" style="background:${m.color}22;color:${m.color}">${m.name}</div>${m.name}`;
+    c.innerHTML = `<div class="mc-av" style="background:${m.color}22;color:${m.color}">${m.name[0]}</div>${m.name}`;
     c.onclick = () => {
       if (selSplitMems.includes(m.name)) {
         if (selSplitMems.length === 1) return;
@@ -1235,7 +1278,7 @@ function rebuildCustom(g) {
 //  RECEIPT PHOTO
 // ═══════════════════════════════════════════════════
 function handleReceipt(input) {
-  const file = input.files;
+  const file = input.files[0];
   if (!file) return;
   const reader = new FileReader();
   reader.onload = e => {
@@ -1254,7 +1297,7 @@ function handleReceipt(input) {
 function addExpense() {
   const amount = parseFloat(document.getElementById('exp-amount').value);
   const desc   = document.getElementById('exp-desc').value.trim() || 'Expense';
-  const date   = document.getElementById('exp-date').value || new Date().toISOString().split('T');
+  const date   = document.getElementById('exp-date').value || new Date().toISOString().split('T')[0];
   const g      = getGroup();
   if (!amount || amount <= 0) { toast('Enter a valid amount', true); return; }
   if (!selPayer)              { toast('Select who paid', true); return; }
@@ -1362,7 +1405,7 @@ function showExpDetail(id) {
     ${Object.entries(exp.splits).map(([mem, share]) => {
       const isPayer = mem === exp.payer;
       return `<div class="split-detail-row">
-        <div class="sdr-av" style="background:${getMemberColor(g,mem)}22;color:${getMemberColor(g,mem)}">${mem}</div>
+        <div class="sdr-av" style="background:${getMemberColor(g,mem)}22;color:${getMemberColor(g,mem)}">${mem[0]}</div>
         <div class="sdr-name">${mem}${isPayer?' (paid)':''}</div>
         <div class="sdr-amount">${S.currency} ${share.toFixed(0)}</div>
         <span class="sdr-status ${isPayer?'paid':'owes'}">${isPayer?'Paid':'Owes'}</span>
@@ -1497,7 +1540,7 @@ function renderFriends() {
     const lbl = b > 0.5 ? 'owes you' : b < -0.5 ? 'you owe' : 'settled';
     return `<div class="group-card">
       <div class="gc-emoji" style="background:${f.color}22;font-size:1.4rem;color:${f.color}">
-        ${f.name.toUpperCase()}
+        ${f.name[0].toUpperCase()}
       </div>
       <div class="gc-info">
         <div class="gc-name">${f.name}</div>
@@ -1607,7 +1650,7 @@ function shareGroup() {
 // ═══════════════════════════════════════════════════
 function renderSettings() {
   document.getElementById('userName').value  = S.userName;
-  document.getElementById('profileAvatar').textContent = S.userName?.toUpperCase() || 'Y';
+  document.getElementById('profileAvatar').textContent = S.userName[0]?.toUpperCase() || 'Y';
   document.querySelectorAll('.curr-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.c === S.currency);
   });
@@ -1615,7 +1658,7 @@ function renderSettings() {
 
 function saveName(val) {
   S.userName = val || 'You';
-  document.getElementById('profileAvatar').textContent = S.userName?.toUpperCase() || 'Y';
+  document.getElementById('profileAvatar').textContent = S.userName[0]?.toUpperCase() || 'Y';
   save();
 }
 
@@ -1639,7 +1682,7 @@ function exportData() {
 function importData() { document.getElementById('importInput').click(); }
 
 function handleImport(input) {
-  const file = input.files;
+  const file = input.files[0];
   if (!file) return;
   const r = new FileReader();
   r.onload = e => {
